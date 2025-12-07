@@ -15,12 +15,27 @@ class WindowClass(QMainWindow, form_class) :
         super().__init__()
         self.setupUi(self)
 
+        self.f = {}
+        self.g = {}
+
         self.fig = plt.Figure()
         self.canvas = FigureCanvas(self.fig)
 
         self.graph_verticalLayout.addWidget(self.canvas)
 
+        self.f_input.clicked.connect(self.finput)
+        self.g_input.clicked.connect(self.ginput)
         self.graph_button.clicked.connect(self.run)
+
+    def finput(self):
+        index = int(self.f_index.toPlainText())
+        number = float(self.f_number.toPlainText())
+        self.f[index] = number
+
+    def ginput(self):
+        index = int(self.g_index.toPlainText())
+        number = float(self.g_number.toPlainText())
+        self.g[index] = number
 
     def run(self):
         x = np.arange(-100,100,1)
@@ -38,8 +53,12 @@ class WindowClass(QMainWindow, form_class) :
 
     def function(self, x):
         x = int(x)
-        g = float(self.g_double.toPlainText())*(x**2) + float(self.g_x.toPlainText())*x + float(self.g_number.toPlainText())
-        f = float(self.f_double.toPlainText())*(g**2) + float(self.f_x.toPlainText())*g + float(self.g_number.toPlainText())
+        g = 0
+        f = 0
+        for index, number in self.g:
+            g += number * (x**index)
+        for index, number in self.f:
+            f += number * (x**index)
         return f
 
 if __name__ == "__main__" :
